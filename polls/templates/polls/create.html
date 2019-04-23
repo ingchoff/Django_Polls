@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Poll</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+        .errorlist{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="container w-50">
+    <h1>Create New Poll</h1>
+    <form method="post" action="{% url 'create_poll' %}">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <p>
+            {{ form.non_field_errors }}
+            </p>
+        {% endif %}
+        <div class="border border-primary rounded p-5 justify-content-center">
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.title.id_for_label }}">{{ form.title.label }}</div>
+                <div class="col text-left">{{ form.title }}{{ form.title.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.email.id_for_label }}">{{ form.email.label }}</div>
+                <div class="col text-left">{{ form.email }}{{ form.email.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.no_questions.id_for_label }}">{{ form.no_questions.label }}</div>
+                <div class="col text-left">{{ form.no_questions }}{{ form.no_questions.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</div>
+                <div class="col text-left">{{ form.start_date }}{{ form.start_date.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</div>
+                <div class="col text-left">{{ form.end_date }}{{ form.end_date.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="center">
+                    <a class="btn btn-danger" href="{% url 'index'%}">กลับสู่หน้าหลัก</a>
+                    <input class="btn btn-primary" type="submit" value="บันทึก">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

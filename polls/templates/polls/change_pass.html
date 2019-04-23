@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change Password!</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+        .errorlist{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="container w-50">
+    <h1>Change Password</h1>
+    <form method="post" action="{% url 'my_change' %}">
+        {% csrf_token %}
+        <div class="border border-primary rounded p-5 justify-content-center">
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.old_password.id_for_label }}">{{ form.old_password.label }}</div>
+                <div class="col text-left">{{ form.old_password }}{{ form.old_password.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.new_password.id_for_label }}">{{ form.new_password.label }}</div>
+                <div class="col text-left">{{ form.new_password }}{{ form.new_password.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.confirm_password.id_for_label }}">{{ form.confirm_password.label }}</div>
+                <div class="col text-left">{{ form.confirm_password }}{{ form.confirm_password.errors }}</div>
+                <div class="w-100 text-center">
+                    {% if form.non_field_errors %}
+                        <p>
+                        {{ form.non_field_errors }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="center">
+                    <input class="btn btn-primary" type="submit" value="Submit!">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

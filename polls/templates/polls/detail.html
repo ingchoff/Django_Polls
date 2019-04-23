@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Detail Page</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>{{ page_title }}</h1>
+    <h3>Questions List</h3>
+    <form method="post" action="{% url 'poll_detail' poll_id=poll.id %}">
+    {% csrf_token %}
+        {% for question in poll.question_set.all %}
+            <div class="row border border-primary rounded p-3 mb-4">
+                <div class="col">
+                    {{ forloop.counter }}. {{ question.text }}
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <ul>
+                        {% for choice in question.choice_set.all %}
+                            <input type="radio" name="choice{{ question.id }}" value="{{ choice.id }}"
+                                   {% if choice.answer %}checked="checked"{% endif %}>
+                            {{ choice.text }} - {{ choice.answer }}<br>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="mb-5 text-center">
+            <a class="btn btn-danger" href="{% url 'index'%}">กลับสู่หน้าหลัก</a>
+            <input class="btn btn-primary" type="submit" value="บันทึก">
+            <a class="btn btn-warning" href="{% url 'create_comment'%}">เพิ่ม comment</a>
+        </div>
+    </form>
+
+{#    <div class="container">#}
+{#        <div class="row mt-4">#}
+{#            <h1>{{ poll.question_set.all.filter() }}</h1>#}
+{#            <h1>{{ page_title }} {{ poll.question_set }} ({{ poll.questions|length }} คำถาม)</h1>#}
+{#        </div>#}
+{#        {% for asks in poll %}#}
+{#            <div class="row border border-primary rounded p-3 mb-4">#}
+{#                <div class="col">#}
+{#                    {{ forloop.counter }}. {{ asks.text }}#}
+{#                </div>#}
+{#                <div class="w-100"></div>#}
+{#                <div class="col">#}
+{#                    <ul>#}
+{#                        {% for choice in asks.choices %}#}
+{#                            <li>{{ choice.text }}</li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+
+</div>
+</body>
+</html>

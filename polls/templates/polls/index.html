@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Poll Page</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row mt-4">
+            <h1>{{ page_title }}</h1>
+        </div>
+        <div class="row border border-primary rounded p-3">
+            <div class="col">
+                <h2 class="d-inline">Poll Lists</h2>
+                {% if perms.polls.add_poll %}
+                    <a class="btn btn-warning ml-3" href="{% url 'create_poll'%}">สร้าง Poll ใหม่</a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <a class="btn btn-warning ml-3" href="{% url 'my_change'%}">Change Password</a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <a class="btn btn-danger ml-3" href="{% url 'my_logout'%}">Logout!</a>
+                {% endif %}
+                <div class="w-100 mb-3"></div>
+                    {% for poll in poll_list %}
+                        <ul>{{ poll.id }} {{ poll.title }} ({{ poll.question_count }} คำถาม) -
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'poll_detail' poll_id=poll.id%}">detail</a>
+                            {% endif %}
+                        </ul>
+                    {% endfor %}
+
+            </div>
+            <div class="col">
+                <img class="float-right" src="{% static 'image/img.png' %}">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

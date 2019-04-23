@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Comment</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+        .errorlist{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="container w-50">
+    <h1>New Comment</h1>
+    <form method="post" action="{% url 'create_comment' %}">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <p>
+            {{ form.non_field_errors }}
+            </p>
+        {% endif %}
+        <div class="border border-primary rounded p-5 justify-content-center">
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.title.id_for_label }}">{{ form.title.label }}</div>
+                <div class="col text-left">{{ form.title }}{{ form.title.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.body.id_for_label }}">{{ form.body.label }}</div>
+                <div class="col text-left">{{ form.body }}{{ form.body.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.email.id_for_label }}">{{ form.email.label }}</div>
+                <div class="col text-left">{{ form.email }}{{ form.email.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row mb-3 mr-5">
+                <div class="col text-right" id="{{ form.tel.id_for_label }}">{{ form.tel.label }}</div>
+                <div class="col text-left">{{ form.tel }}{{ form.tel.errors }}</div>
+                <div class="w-100"></div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="center">
+                    <a class="btn btn-danger" href="{% url 'index'%}">กลับสู่หน้าหลัก</a>
+                    <input class="btn btn-primary" type="submit" value="บันทึก">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
