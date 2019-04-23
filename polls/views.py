@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from .forms import PollForm, CommentForm, QuestionForm, MyLoginForm, ChangePasswordForm
+from .forms import PollForm, CommentForm, QuestionForm, MyLoginForm, ChangePasswordForm, PollModelForm
 from .models import Poll, Question, Answer, Comment
 
 
@@ -64,27 +64,57 @@ def detail(request, poll_id):
 @permission_required('polls.add_poll')
 def create(request):
     if request.method == 'POST':
-        form = PollForm(request.POST)
+        form = PollModelForm(request.POST)
 
         if form.is_valid():
-            poll = Poll.objects.create(
-                title=form.cleaned_data.get('title'),
-                start_date=form.cleaned_data.get('start_date'),
-                end_date=form.cleaned_data.get('end_date')
-            )
-
-            for i in range(1, form.cleaned_data.get('no_questions') + 1):
-                Question.objects.create(
-                    text='QQQ' + str(i),
-                    type='01',
-                    poll=poll
-                )
+            form.save()
+            # poll = Poll.objects.create(
+            #     title=form.cleaned_data.get('title'),
+            #     start_date=form.cleaned_data.get('start_date'),
+            #     end_date=form.cleaned_data.get('end_date')
+            # )
+            #
+            # for i in range(1, form.cleaned_data.get('no_questions') + 1):
+            #     Question.objects.create(
+            #         text='QQQ' + str(i),
+            #         type='01',
+            #         poll=poll
+            #     )
 
     else:
-        form = PollForm()
+        form = PollModelForm()
 
     context = {'form': form}
     return render(request, 'polls/create.html', context=context)
+
+
+@login_required
+@permission_required('polls.change_poll')
+def update(request, poll_id):
+    poll = Poll.objects.get(id=poll_id)
+    if request.method == 'POST':
+        form = PollModelForm(request.POST, instance=poll)
+
+        if form.is_valid():
+            form.save()
+            # poll = Poll.objects.create(
+            #     title=form.cleaned_data.get('title'),
+            #     start_date=form.cleaned_data.get('start_date'),
+            #     end_date=form.cleaned_data.get('end_date')
+            # )
+            #
+            # for i in range(1, form.cleaned_data.get('no_questions') + 1):
+            #     Question.objects.create(
+            #         text='QQQ' + str(i),
+            #         type='01',
+            #         poll=poll
+            #     )
+
+    else:
+        form = PollModelForm(instance=poll)
+
+    context = {'form': form, 'poll_obj': poll}
+    return render(request, 'polls/update.html', context=context)
 
 
 def comment(request):

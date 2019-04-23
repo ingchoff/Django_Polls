@@ -9,5 +9,6 @@ urlpatterns = [
     path('create-question/', views.question, name='create_question'),
     path('login/', views.my_login, name='my_login'),
     path('logout/', views.my_logout, name='my_logout'),
-    path('change-pass', views.my_change_pass, name='my_change')
+    path('change-pass/', views.my_change_pass, name='my_change'),
+    path('update/<int:poll_id>/', views.update, name='update_poll')
 ]

@@ -5,6 +5,8 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.http import request
 
+from polls.models import Poll
+
 
 def validate_even(value):
     if value % 2 != 0:
@@ -41,7 +43,7 @@ class PollForm(forms.Form):
 
 class CommentForm(forms.Form):
     title = forms.CharField(max_length=100, label='title', required=True)
-    body = forms.CharField(widget=forms.Textarea ,max_length=500, label='body', required=True)
+    body = forms.CharField(widget=forms.Textarea, max_length=500, label='body', required=True)
     email = forms.CharField(validators=[validators.validate_email], required=False)
     tel = forms.CharField(max_length=10, label='tel', required=False)
 
@@ -67,7 +69,7 @@ class CommentForm(forms.Form):
         if data.isalpha():
             raise forms.ValidationError("ต้องใส่เป็นตัวเลขเท่านั้น")
 
-        elif len(data) != 10:
+        elif len(data) != 10 and data != '':
             raise forms.ValidationError("ต้องกรอกครบ 10 หลัก")
 
         return data
@@ -120,3 +122,33 @@ class ChangePasswordForm(forms.Form):
 
         if new != confirm:
             raise forms.ValidationError('รหัสผ่านใหม่ กับ confirm password ไม่ตรงกัน')
+
+
+class PollModelForm(forms.ModelForm):
+    email = forms.CharField(validators=[validators.validate_email])
+    no_questions = forms.IntegerField(label="จำนวนคำถาม", min_value=0, max_value=10, required=True,
+                                      validators=[validate_even])
+
+    class Meta:
+        model = Poll
+        exclude = ['del_flag']
+
+    def clean_title(self):
+        data = self.cleaned_data['title']
+
+        if "IT" not in data:
+            raise forms.ValidationError("คุณลืมชื่อคณะ")
+
+        return data
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start = cleaned_data.get('start_date')
+        end = cleaned_data.get('end_date')
+
+        if start and not end:
+            self.add_error('end_date', 'โปรดเลือกวันที่สิ้นสุด')
+            # raise forms.ValidationError('โปรดเลือกวันที่สิ้นสุด')
+        elif end and not start:
+            self.add_error('start_date', 'โปรดเลือกวันที่เริ่มต้น')
+            # raise forms.ValidationError('โปรดเลือกวันที่เริ่มต้น')
